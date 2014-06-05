@@ -1,0 +1,12 @@
+# Change to the directory that contains the source code
+cd /var/www
+# Activate the python virtual environment 
+. ./activate
+
+#Run the tests
+python manage.py test
+
+#Expected output looks like this
+Ran 22 tests in 0.221s
+
+OK

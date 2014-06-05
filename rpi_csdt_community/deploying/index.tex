@@ -1,0 +1,216 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University/School Laboratory Report
+% LaTeX Template
+% Version 3.1 (25/3/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Linux and Unix Users Group at Virginia Tech Wiki 
+% (https://vtluug.org/wiki/Example_LaTeX_chem_lab_report)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage{natbib} % Required to change bibliography style to APA
+\usepackage{acronym} 
+\usepackage{hyperref}
+
+%% Code blocks
+
+\usepackage{listings} % Required for inserting code snippets
+\usepackage[usenames,dvipsnames]{color} % Required for specifying custom colors and referring to colors by name
+
+\definecolor{DarkGreen}{rgb}{0.0,0.4,0.0} % Comment color
+\definecolor{highlight}{RGB}{255,251,204} % Code highlight color
+
+\lstdefinestyle{Style1}{ % Define a style for your code snippet, multiple definitions can be made if, for example, you wish to insert multiple code snippets using different programming languages into one document
+language=Bash, % Detects keywords, comments, strings, functions, etc for the language specified
+backgroundcolor=\color{highlight}, % Set the background color for the snippet - useful for highlighting
+basicstyle=\footnotesize\ttfamily, % The default font size and style of the code
+breakatwhitespace=false, % If true, only allows line breaks at white space
+breaklines=true, % Automatic line breaking (prevents code from protruding outside the box)
+captionpos=b, % Sets the caption position: b for bottom; t for top
+commentstyle=\usefont{T1}{pcr}{m}{sl}\color{DarkGreen}, % Style of comments within the code - dark green courier font
+deletekeywords={}, % If you want to delete any keywords from the current language separate them by commas
+%escapeinside={\%}, % This allows you to escape to LaTeX using the character in the bracket
+firstnumber=1, % Line numbers begin at line 1
+frame=single, % Frame around the code box, value can be: none, leftline, topline, bottomline, lines, single, shadowbox
+frameround=tttt, % Rounds the corners of the frame for the top left, top right, bottom left and bottom right positions
+keywordstyle=\color{Blue}\bf, % Functions are bold and blue
+morekeywords={}, % Add any functions no included by default here separated by commas
+numbers=left, % Location of line numbers, can take the values of: none, left, right
+numbersep=10pt, % Distance of line numbers from the code box
+numberstyle=\tiny\color{Gray}, % Style used for line numbers
+rulecolor=\color{black}, % Frame border color
+showstringspaces=false, % Don't put marks in string spaces
+showtabs=false, % Display tabs in the code as lines
+stepnumber=5, % The step distance between line numbers, i.e. how often will lines be numbered
+stringstyle=\color{Purple}, % Strings are purple
+tabsize=2, % Number of spaces per tab in the code
+}
+
+% Create a command to cleanly insert a snippet with the style above anywhere in the document
+\newcommand{\insertcode}[2]{\begin{itemize}\item[]\lstinputlisting[caption=#2,label=#1,style=Style1]{#1}\end{itemize}} % The first argument is the script location/filename and the second is a caption for the listing
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%\usepackage{times} % Uncomment to use the Times New Roman font
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Deploying the CSDT Community Site} % Title
+
+\author{GK-12 @ RPI} % Author name
+
+\date{\today} % Date for the report
+
+% Acronyms
+
+\acrodef{ccs}[CCS]{CSDT Community Site}
+
+\begin{document}
+
+\maketitle % Insert the title, author and date
+
+% If you wish to include an abstract, uncomment the lines below
+% \begin{abstract}
+% Abstract text
+% \end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Objective}
+
+To document the procedure for deploying an updated version of the \ac{ccs} server package. This document is intended for developers of the CCS or CSnap.
+
+
+% If you have more than one objective, uncomment the below:
+%\begin{description}
+%\item[First Objective] \hfill \\
+%Objective 1 text
+%\item[Second Objective] \hfill \\
+%Objective 2 text
+%\end{description}
+
+\subsection{Definitions}
+\label{definitions}
+\begin{description}
+\item[\acf{ccs}]
+The \acl{ccs} software is a Django-based application which allows users to easily share CSnap projects, ideas, and other material related to the GK-12 grant at RPI.
+For more information, please see the document (Insert bilbo reference here)
+\item[CSnap]
+CSnap is a drag-and-drop visual programming environment. 
+It integrates with the \ac{ccs} to help students learn programming skills.
+For more information, please see the document (Insert bilbo reference here)
+\end{description}
+
+\subsection{Big Picture}
+
+The procedure works as follows:
+\begin{enumerate}
+ \item Schedule downtime, bring down the live server
+ \item Clone the server hosting the live \ac{ccs}
+ \item Perform updates on the cloned server
+ \item Run all unit tests
+ \item Run all manual tests
+ \item Bring up the live server
+\end{enumerate}
+
+\section{Clone the live server}
+
+The live server contains \ac{ccs} application, live database, and uploaded user files.
+Before performing an upgrade, we will clone the live server so if something goes wrong, we don't lose any data.
+
+\subsection{Procedure}
+
+Schedule time with \href{mailto:COPPEE@rpi.edu}{Ethan Coppenrath (\nolinkurl{COPPEE@rpi.edu})} to update the community site.
+During this time, Ethan will need to:
+\begin{enumerate}
+ \item Disconnect the live server from the internet
+ \item Clone the live server
+ \item Give the developer time to update the cloned server
+ \item Connect the cloned server to the internet as the live server
+\end{enumerate}
+
+If something goes wrong and results in a longer than anticipated down time (more than an hour), the old live server should be brought back online while the developer debugs the changes.
+
+\section{Updating on the cloned server}
+
+The first step in updating is to gain access to the server.
+After gaining access, update the application, static files, and migrate the database.
+
+\subsection{Gaining access}
+
+Login information is stored seperately in the csdt\_doc\_private respository, which the developer will need access to.
+To gain access to this repository, contact \href{mailto:eglash@rpi.edu}{Ron Eglash (\nolinkurl{eglash@rpi.edu})}.
+
+\subsection{Updating the application}
+
+This section depends a lot on what changes were made.
+In general, it will involve:
+\begin{enumerate}
+ \item Performing a git-pull from the master repository on Github
+ \item Updating all installed Django/Python modules
+ \item Performing updates for any linked projects (such as CSnap)
+ \item Updating the collected static files
+ \item Migrating the database
+\end{enumerate}
+
+\subsubsection{Updating \ac{ccs}}
+
+Run the commands in listing \ref{scripts/update-ccs.txt} one at a time, and deal with errors as they appear.
+Expected output is displayed below each command.
+Large outputs are truncated.
+
+\label{update-ccs}
+\insertcode{scripts/update-ccs.txt}{Updating the application}
+
+\section{Running all unit tests}
+
+Run the commands in listing \ref{scripts/unitTest-css.txt} to perform the built-in unit tests.
+
+\label{unitTest-css}
+\insertcode{scripts/unitTest-css.txt}{Running unit tests}
+
+If the unit test reports any failures, fix the \ac{ccs} so that all tests pass before continuing.
+
+\section{Run manual tests}
+
+Connect to the server by adjusting the your configuration so that \url{http://community.csdt.rpi.edu} points to the IP of the server you are configuring.
+
+Run the tests documented in (insert reference to the manual testing document here).
+
+\section{Bringing up the live site}
+
+Once all updates and tests have been completed, bring the site back up.
+To do this, simply update the IP on the cloned machine so that it replaces the old machine.
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\bibliographystyle{apalike}
+
+\bibliography{sample}
+
+%----------------------------------------------------------------------------------------
+
+
+\end{document}

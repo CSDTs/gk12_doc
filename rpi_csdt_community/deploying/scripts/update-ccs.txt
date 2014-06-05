@@ -1,0 +1,25 @@
+# Change to the directory that contains the source code
+cd /var/www
+# Update the code
+git pull
+# Activate the python virtual environment 
+. ./activate
+# Update all the installed packages
+pip install --upgrade -r libraries.txt
+
+# Perform updates for linked projects, if desired
+git submodule update
+# You may have to perform special updates for the linked projects
+# See that projects documentation for more details
+
+# Update the collected static files
+#  These are kept cached to help with performance
+python ./manage.py collectstatic
+# You will be prompted, type yes to continue
+
+# Migrate the database
+# !! This is the most dangerous part! And why we keep backups
+# If there are errors here, they could be hard to fix
+#  might be worth having the old site be put back up while
+#  you investiage
+python ./manage.py migrate
